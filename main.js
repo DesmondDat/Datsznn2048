@@ -61,3 +61,30 @@ startBtn.addEventListener('click', () => {
     game = new Game2048();
     render();
 });
+
+// Touch controls for mobile
+let touchStartX = 0;
+let touchStartY = 0;
+
+boardDiv.addEventListener('touchstart', function(e) {
+    if (!currentUser) return;
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+});
+
+boardDiv.addEventListener('touchend', function(e) {
+    if (!currentUser) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    let moved = false;
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 30) moved = game.move('right');
+        else if (dx < -30) moved = game.move('left');
+    } else {
+        if (dy > 30) moved = game.move('down');
+        else if (dy < -30) moved = game.move('up');
+    }
+    if (moved) render();
+});
